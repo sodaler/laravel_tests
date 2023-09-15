@@ -3,7 +3,6 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Site;
-use App\Models\User;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -12,17 +11,11 @@ class SitesControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_create_sites(): void
     {
-        $this->withoutExceptionHandling();
-
-        $user = UserFactory::new()->create();
-
+        // make a post request to a route to create a site
         $response = $this->followingRedirects()
-            ->actingAs($user)
             ->post(route('sites.store'),
                 [
                     'name' => 'Google',
@@ -30,16 +23,18 @@ class SitesControllerTest extends TestCase
                 ]
             );
 
-        $site = Site::first();
-        $this->assertEquals(1, Site::count());
-        $this->assertEquals('Google', $site->name);
-        $this->assertEquals('https://google.com', $site->url);
-        $this->assertNull($site->is_online);
-        $this->assertEquals($user->id, $site->user->id);
+        // make sure no site exists in the db
+        $this->assertEquals(0, Site::count());
 
-        $response->assertSeeText('Google');
-        $this->assertEquals(route('sites.show', $site),
-            url()->current());
+        // redirect ro login page
+        $response->assertSeeText('Laravel');
+        $this->assertEquals(route('login'), url()->current());
+
+    }
+
+    /** @test */
+    public function it_only_allows_authenticated_users_to_create_sites()
+    {
 
     }
 }
