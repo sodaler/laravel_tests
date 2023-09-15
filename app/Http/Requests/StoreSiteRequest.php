@@ -23,8 +23,8 @@ class StoreSiteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required|string'],
-            'url' => ['required|string', new ValidProtocol()],
+            'name' => ['required', 'string'],
+            'url' => ['required', 'string', new ValidProtocol()],
         ];
     }
 }
