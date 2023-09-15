@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('url');
-            $table->boolean('is_online');
+            $table->boolean('is_online')->nullable();
             $table->foreignIdFor(\App\Models\User::class)
                     ->nullable()
                     ->constrained()

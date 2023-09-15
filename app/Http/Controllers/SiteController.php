@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Site;
 use App\Http\Requests\StoreSiteRequest;
 use App\Http\Requests\UpdateSiteRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class SiteController extends Controller
 {
@@ -27,17 +29,21 @@ class SiteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSiteRequest $request)
+    public function store(StoreSiteRequest $request): RedirectResponse
     {
-        //
+        $site = auth()->user()
+            ->sites()
+            ->create($request->validated());
+
+        return redirect()->route('sites.show', $site);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Site $site)
+    public function show(Site $site): View
     {
-        //
+        return view('sites.show', compact('site'));
     }
 
     /**

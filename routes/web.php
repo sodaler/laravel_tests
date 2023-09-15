@@ -33,3 +33,7 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::resource('sites', \App\Http\Controllers\SiteController::class);
+});
