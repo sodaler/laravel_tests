@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ValidProtocol;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSiteRequest extends FormRequest
@@ -22,8 +23,8 @@ class StoreSiteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'url' => 'required|string'
+            'name' => ['required|string'],
+            'url' => ['required|string', new ValidProtocol()],
         ];
     }
 }

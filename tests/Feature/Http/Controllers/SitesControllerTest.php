@@ -53,6 +53,27 @@ class SitesControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_requires_the_url_to_have_a_valid_protocol()
+    {
+        // create a user
+        $user = UserFactory::new()->create();
+
+        // make a post request to a route to create a site
+        $response = $this->actingAs($user)
+            ->post(route('sites.store'),
+                [
+                    'name' => 'Google',
+                    'url' => 'google.com'
+                ]
+            );
+
+        // make sure no site exists in the db
+        $this->assertEquals(0, Site::count());
+
+        $response->assertSessionHasErrors(['url']);
+    }
+
+    /** @test */
     public function it_only_allows_authenticated_users_to_create_sites()
     {
         $this->withoutExceptionHandling();
