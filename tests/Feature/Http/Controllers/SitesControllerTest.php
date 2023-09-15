@@ -14,6 +14,26 @@ class SitesControllerTest extends TestCase
     /** @test */
     public function it_create_sites(): void
     {
+        // make a post request to a route to create a site
+        $response = $this->followingRedirects()
+            ->post(route('sites.store'),
+                [
+                    'name' => 'Google',
+                    'url' => 'https://google.com'
+                ]
+            );
+
+        // make sure no site exists in the db
+        $this->assertEquals(0, Site::count());
+
+        // redirect ro login page
+        $response->assertSeeText('Laravel');
+        $this->assertEquals(route('login'), url()->current());
+    }
+
+    /** @test */
+    public function it_only_allows_authenticated_users_to_create_sites()
+    {
         $this->withoutExceptionHandling();
 
         $user = UserFactory::new()->create();
@@ -39,26 +59,5 @@ class SitesControllerTest extends TestCase
         $response->assertSeeText('Google');
         $this->assertEquals(route('sites.show', $site),
             url()->current());
-
-    }
-
-    /** @test */
-    public function it_only_allows_authenticated_users_to_create_sites()
-    {
-        // make a post request to a route to create a site
-        $response = $this->followingRedirects()
-            ->post(route('sites.store'),
-                [
-                    'name' => 'Google',
-                    'url' => 'https://google.com'
-                ]
-            );
-
-        // make sure no site exists in the db
-        $this->assertEquals(0, Site::count());
-
-        // redirect ro login page
-        $response->assertSeeText('Laravel');
-        $this->assertEquals(route('login'), url()->current());
     }
 }
