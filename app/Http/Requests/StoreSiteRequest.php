@@ -22,8 +22,8 @@ class StoreSiteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string',
-            'url' => 'string'
+            'name' => 'required|string',
+            'url' => 'required|string'
         ];
     }
 }
